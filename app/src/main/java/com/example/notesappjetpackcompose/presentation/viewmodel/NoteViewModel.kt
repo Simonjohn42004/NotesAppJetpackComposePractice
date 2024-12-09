@@ -4,8 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notesappjetpackcompose.data.Note
 import com.example.notesappjetpackcompose.data.NoteDao
+import com.example.notesappjetpackcompose.utils.NoteUtils.calculateDelay
+import com.example.notesappjetpackcompose.utils.NoteUtils.getTimeAgo
 import com.example.notesappjetpackcompose.utils.SortType
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -21,14 +25,16 @@ class NoteViewModel(
 
     private val _state = MutableStateFlow(NoteState())
     private val _sortType = MutableStateFlow(_state.value.sortType)
+    private val _timeAgo = MutableStateFlow("")
 
 
     private val _notes = _sortType
         .flatMapLatest {
-            when(it) {
+            when (it) {
                 SortType.By_Title -> {
                     dao.getNotesByTitle()
                 }
+
                 SortType.By_Date_Added -> {
                     dao.getNotesByDateAdded()
                 }
@@ -38,10 +44,11 @@ class NoteViewModel(
             started = SharingStarted.WhileSubscribed(),
             initialValue = emptyList()
         )
-    val state = combine(_state, _sortType, _notes ) {state, sortType, notes ->
+    val state = combine(_state, _sortType, _notes, _timeAgo) { state, sortType, notes, timeAgo ->
         state.copy(
             notesList = notes,
-            sortType = sortType
+            sortType = sortType,
+            timeStamp = timeAgo
         )
     }.stateIn(
         scope = viewModelScope,
@@ -50,24 +57,25 @@ class NoteViewModel(
     )
 
 
-    fun onEvent(event: NoteEvents){
-        when(event){
+    fun onEvent(event: NoteEvents) {
+        when (event) {
             is NoteEvents.DeleteNote -> {
                 viewModelScope.launch {
                     dao.deleteNote(event.note)
                 }
             }
+
             NoteEvents.SaveNote -> {
                 val title = state.value.title
                 val description = state.value.description
-                val dateAdded = state.value.dateAdded
+                val dateAdded = System.currentTimeMillis()
 
-                if(title.isBlank() || description.isBlank()){
+                if (title.isBlank() || description.isBlank()) {
                     return
                 }
                 val note = Note(
-                    title = title,
-                    description = description,
+                    title = title.trim(),
+                    description = description.trim(),
                     dateAdded = dateAdded
                 )
 
@@ -75,19 +83,30 @@ class NoteViewModel(
                     dao.upsertNote(note)
                 }
             }
+
             is NoteEvents.SetTitle -> {
-                _state.update { it.copy(
-                    title = event.title
-                ) }
+                _state.update {
+                    it.copy(
+                        title = event.title
+                    )
+                }
             }
+
             is NoteEvents.SetDescription -> {
-                _state.update { it.copy(
-                    description = event.description
-                ) }
+                _state.update {
+                    it.copy(
+                        description = event.description
+                    )
+                }
             }
+
             is NoteEvents.SortNotes -> {
                 _sortType.value = event.sortType
             }
+
+
         }
     }
+
+
 }

@@ -2,6 +2,7 @@ package com.example.notesappjetpackcompose.presentation.viewmodel
 
 import com.example.notesappjetpackcompose.data.Note
 import com.example.notesappjetpackcompose.utils.SortType
+import java.sql.Time
 
 sealed interface NoteEvents {
     object SaveNote: NoteEvents

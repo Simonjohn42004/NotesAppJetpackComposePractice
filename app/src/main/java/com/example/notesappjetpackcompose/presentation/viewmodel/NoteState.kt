@@ -7,7 +7,6 @@ data class NoteState(
     val notesList: List<Note> = emptyList(),
     val title: String = "",
     val description: String = "",
-    val dateAdded: Long = 0,
-    val isOperationSuccessful: Boolean = false,
-    val sortType: SortType = SortType.By_Title
+    val sortType: SortType = SortType.By_Title,
+    val timeStamp: String = ""
 )

@@ -20,4 +20,5 @@ interface NoteDao {
 
     @Query("SELECT * FROM NOTE ORDER BY dateAdded ASC")
     fun getNotesByDateAdded(): Flow<List<Note>>
+
 }
