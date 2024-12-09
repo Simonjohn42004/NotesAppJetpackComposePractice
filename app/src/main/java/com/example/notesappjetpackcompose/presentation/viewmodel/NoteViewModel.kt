@@ -4,12 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notesappjetpackcompose.data.Note
 import com.example.notesappjetpackcompose.data.NoteDao
-import com.example.notesappjetpackcompose.utils.NoteUtils.calculateDelay
-import com.example.notesappjetpackcompose.utils.NoteUtils.getTimeAgo
 import com.example.notesappjetpackcompose.utils.SortType
-import kotlinx.coroutines.Delay
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
