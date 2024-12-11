@@ -1,14 +1,10 @@
 package com.example.notesappjetpackcompose.presentation.components
 
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxDefaults.positionalThreshold
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.rememberUpdatedState
 import com.example.notesappjetpackcompose.data.Note
 import com.example.notesappjetpackcompose.presentation.viewmodel.NoteEvents
 import kotlinx.coroutines.delay
@@ -19,7 +15,6 @@ fun NoteItem(
     note: Note,
     onEvent: (NoteEvents) -> Unit
 ) {
-    val noteItem by rememberUpdatedState(note)
     val scope = rememberCoroutineScope()
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
