@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -68,5 +69,13 @@ dependencies {
 
     //Icons Extended
     implementation (libs.androidx.material.icons.extended)
+
+    //Dagger Hilt
+    implementation(libs.hilt.android)
+    ksp (libs.dagger.compiler)
+    ksp (libs.hilt.compiler)
+    implementation (libs.androidx.hilt.navigation.compose)
+
+
 
 }
